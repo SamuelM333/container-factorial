@@ -9,7 +9,7 @@ resource "aws_ecr_repository" "this" {
 resource "aws_ecr_lifecycle_policy" "this" {
   repository = aws_ecr_repository.this.name
 
-  policy = templatefile("${path.module}/ecr_lifecycle_policy.tpl", {
+  policy = templatefile("${path.module}/ecr_lifecycle_policy.hcl", {
     max_number_tagged_images = var.max_number_tagged_images,
     max_days_untagged_images = var.max_days_untagged_images
   })

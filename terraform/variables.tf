@@ -5,6 +5,11 @@ variable "region" {
 }
 
 # VPC
+
+variable "private_subnets" {
+  type = list(string)
+}
+
 variable "ingress_cidr_blocks" {
   type        = list(string)
   description = "Allowed ingress CIDR blocks for the service security group"

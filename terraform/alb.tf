@@ -5,8 +5,8 @@ module "alb" {
   name               = "${local.service_name}-alb"
   load_balancer_type = "application"
 
-  vpc_id          = data.aws_vpc.this.id
-  subnets         = data.aws_subnet_ids.public.ids
+  vpc_id          = module.vpc.vpc_id
+  subnets         = module.vpc.public_subnets
   security_groups = [module.security_group_alb.security_group_id]
 
   target_groups = [

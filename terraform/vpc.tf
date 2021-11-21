@@ -1,9 +1,30 @@
-data "aws_vpc" "this" {
-  default = true
-}
+module "vpc" {
+  source  = "terraform-aws-modules/vpc/aws"
+  version = "~> 3.11"
 
-data "aws_subnet_ids" "public" {
-  vpc_id = data.aws_vpc.this.id
+  name = "simple"
+  cidr = "10.0.0.0/16"
+
+  azs             = ["${var.region}a", "${var.region}b", "${var.region}c"]
+  private_subnets = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+  public_subnets  = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
+
+  enable_ipv6 = false
+
+  enable_nat_gateway = true
+  single_nat_gateway = true
+
+  public_subnet_tags = {
+    Type = "public"
+  }
+
+  private_subnet_tags = {
+    Type = "private"
+  }
+
+  vpc_tags = {
+    Name = "simple"
+  }
 }
 
 module "security_group_alb" {
@@ -13,7 +34,7 @@ module "security_group_alb" {
   name            = "${local.service_name}-alb"
   description     = "Security Group for ${local.service_name} ALB"
   use_name_prefix = false
-  vpc_id          = data.aws_vpc.this.id
+  vpc_id          = module.vpc.vpc_id
 
   ingress_with_cidr_blocks = [
     {
@@ -35,7 +56,7 @@ module "security_group_service" {
   name            = local.service_name
   description     = "Security Group for ${local.service_name}"
   use_name_prefix = false
-  vpc_id          = data.aws_vpc.this.id
+  vpc_id          = module.vpc.vpc_id
 
   ingress_with_source_security_group_id = [{
     from_port                = local.service_port

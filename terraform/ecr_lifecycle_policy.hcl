@@ -5,6 +5,7 @@ ${jsonencode({
         "description": "Keep max_number_tagged_images tagged images", 
         "selection": {
           "tagStatus": "tagged",
+          "tagPrefixList": ["container-factorial-"],
           "countType": "imageCountMoreThan",
           "countNumber": max_number_tagged_images
         },

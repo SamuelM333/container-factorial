@@ -14,14 +14,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
-
-      - name: Install Python requirements
-        id: pip
-        run: pip install -r requirements.txt
 
       - name: Terraform Format
         id: fmt
@@ -30,14 +27,6 @@ jobs:
       - name: Terraform Init
         id: init
         run: terraform -chdir=terraform init
-
-      - name: Chalice package
-        id: package
-        env:
-          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
-        run: |
-          chalice package --pkg-format terraform terraform
-          cat <<< $(jq 'del(.provider.aws)' terraform/chalice.tf.json) > terraform/chalice.tf.json
 
       - name: Terraform Validate
         id: validate
@@ -89,3 +78,24 @@ jobs:
           AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
         run: terraform -chdir=terraform apply -auto-approve
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      #- name: Build docker image
+        #uses: docker/build-push-action@v2
+        #with:
+          #context: .
+          #push: false
+          #tags: container-factorial:latest
+
+      - run: docker build --tag container-factorial .
+      - name: Push to ECR
+        id: ecr
+        uses: jwalton/gh-ecr-push@v1
+        with:
+          access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          region: us-east-1
+          local-image: container-factorial
+          image: container-factorial:latest

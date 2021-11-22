@@ -1,9 +1,6 @@
 package main
 
 import (
-	//"encoding/json"
-	//"fmt"
-	//"log"
 	"math/big"
 	"net/http"
 	"strconv"
@@ -23,6 +20,7 @@ func main() {
 	router.GET("/factorial/:n", func(c *gin.Context) {
 		n := c.Param("n")
 		param, err := strconv.ParseInt(n, 10, 64)
+
 		// Handle non numbers strings and negatives
 		if err != nil || param < 0 {
 			c.String(http.StatusBadRequest, "Must provide a number greater or equal than 0")

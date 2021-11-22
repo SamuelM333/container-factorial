@@ -52,6 +52,11 @@ resource "aws_ecs_service" "this" {
   }
 }
 
+resource "aws_cloudwatch_log_group" "yada" {
+  name              = "/aws/ecs/${local.service_name}"
+  retention_in_days = 7
+}
+
 module "container" {
   source  = "cloudposse/ecs-container-definition/aws"
   version = "~> 0.58"

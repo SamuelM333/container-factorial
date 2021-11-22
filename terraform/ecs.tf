@@ -30,8 +30,9 @@ resource "aws_ecs_service" "this" {
   name    = local.service_name
   cluster = module.ecs.ecs_cluster_id
 
-  task_definition = aws_ecs_task_definition.this.family
-  launch_type     = "FARGATE"
+  task_definition  = "${aws_ecs_task_definition.this.family}:${aws_ecs_task_definition.this.revision}"
+  launch_type      = "FARGATE"
+  platform_version = "1.4.0"
 
   desired_count = var.ecs_desired_count
 

@@ -17,6 +17,10 @@ func factorial(n int64) *big.Int {
 func main() {
 	router := gin.Default()
 
+	router.GET("/", func(c *gin.Context) {
+		c.String(http.StatusOK, "ping")
+	})
+
 	router.GET("/factorial/:n", func(c *gin.Context) {
 		n := c.Param("n")
 		param, err := strconv.ParseInt(n, 10, 64)

@@ -28,7 +28,6 @@ data "aws_iam_policy_document" "logs" {
       "logs:PutLogEvents"
     ]
     resources = [
-      "arn:aws:logs:${var.region}:${data.aws_caller_identity.current.account_id}:log-group:/aws/ecs/containerinsights/${local.service_name}*",
       "arn:aws:logs:${var.region}:${data.aws_caller_identity.current.account_id}:log-group:/aws/ecs/${local.service_name}*"
     ]
   }

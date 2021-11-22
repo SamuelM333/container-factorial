@@ -3,7 +3,7 @@ module "ecs" {
   version = "~> 3.4"
 
   name               = local.service_name
-  container_insights = true
+  container_insights = false
   capacity_providers = ["FARGATE"]
 
   default_capacity_provider_strategy = [{

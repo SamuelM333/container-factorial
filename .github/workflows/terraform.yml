@@ -77,7 +77,8 @@ jobs:
         env:
           AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
         if: github.ref == 'refs/heads/master' && github.event_name == 'push'
-        run: terraform -chdir=terraform apply -auto-approve
+        #run: terraform -chdir=terraform apply -auto-approve
+        run: echo "terraform -chdir=terraform apply -auto-approve"
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1

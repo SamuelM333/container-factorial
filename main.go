@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os"
+	"fmt"
 	"math/big"
 	"net/http"
 	"strconv"
@@ -16,12 +18,14 @@ func factorial(n int64) *big.Int {
 
 func main() {
 	router := gin.Default()
+	// host := os.Getenv("HOST")
+	port := os.Getenv("PORT")
 
 	router.GET("/", func(c *gin.Context) {
 		c.String(http.StatusOK, "ping")
 	})
 
-	router.GET("/factorial/:n", func(c *gin.Context) {
+	router.GET("/:n", func(c *gin.Context) {
 		n := c.Param("n")
 		param, err := strconv.ParseInt(n, 10, 64)
 
@@ -34,5 +38,5 @@ func main() {
 		c.String(http.StatusOK, factorial(param).String())
 	})
 
-	router.Run(":8080")
+	router.Run(fmt.Sprintf(":%s", port))
 }
